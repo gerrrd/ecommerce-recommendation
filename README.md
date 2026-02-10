@@ -31,13 +31,15 @@ I have implemented 5 different recommender systems and services to perform it.
 
 ## Models
 
-I have chosen the following 4 models:
+I have chosen the following 5 models:
 
 - *Association rules:* based market basket analysis -- which products are generally sold together. Fast, easy to interpret (rules are human-readable)
 - *Collaborative filtering:* represents user behaviour, what other users with similar basket have bought
 - *Tf-idf (Term Frequency-Inverse Document Frequency):* content-based, using text (description) based on their frequency (per word), fast, but depends highly on the training set (i.e. words)
 - *LLM (Sentence Transformers):* content-based, using the semantic meaning, it can predict for new words/descriptions, computationally heavy
 - *LLM-embedding-boosted Association rules:* instead of direct matching among the rules, we use the (Euclidian) distance from their text, gaining recommendations also having synonyms or similar words
+- #TODO *LLM-Association rules-LLM:* as the previous one but also add recommendations based on the embedding distance from the results.
+- #TODO2 *LLM-Association rules-LLM-LLM:* as the previous one but followed by an API call to Google Gemini 1.5 Flash via `google-genai` to understand which of the recommended elements are most probable/logical lifestyle bundle.
 
 ## Architecture
 
