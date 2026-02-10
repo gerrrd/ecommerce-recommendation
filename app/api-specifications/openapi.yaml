@@ -1,0 +1,141 @@
+openapi: 3.1.0
+info:
+  title: Ecommerce-Recommendation
+  version: 0.1.0
+paths:
+  /predict:
+    post:
+      summary: Predict
+      operationId: predict_predict_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InputRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /health:
+    get:
+      summary: Health
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    InputRequest:
+      properties:
+        recommender_model:
+          $ref: '#/components/schemas/RecommenderModel'
+          description: Chosen model to recommend.
+        customer_id:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Customer Id
+          description: Optionally given customerId for collaborative filtering.
+          default: -1
+        selected_products:
+          items:
+            type: integer
+          type: array
+          title: Selected Products
+          description: Selected products to predict for.
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Text input in case of predicting for a new product.
+          default: ''
+      type: object
+      required:
+      - recommender_model
+      - selected_products
+      title: InputRequest
+    Output:
+      properties:
+        results:
+          items:
+            type: integer
+          type: array
+          title: Results
+          description: List of recommended products by StockID.
+      type: object
+      required:
+      - results
+      title: Output
+    RecommenderModel:
+      type: string
+      enum:
+      - association_rules
+      - collaborative_filtering
+      - tfidf
+      - llm
+      title: RecommenderModel
+    Response:
+      properties:
+        input:
+          $ref: '#/components/schemas/InputRequest'
+        output:
+          $ref: '#/components/schemas/Output'
+        estimation_id:
+          type: string
+          title: Estimation Id
+          description: Estimation uuid or any string if given.
+        processing_time:
+          type: integer
+          title: Processing Time
+          description: Processing time in seconds.
+      type: object
+      required:
+      - input
+      - output
+      - estimation_id
+      - processing_time
+      title: Response
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

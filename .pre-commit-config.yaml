@@ -1,10 +1,10 @@
 repos:
-#  - repo: local
-#    hooks:
-#      - id: generate-api-specifications
-#        name: generate-api-specifications
-#        language: system
-#        entry: ./app/fastapi_specifications.sh
+  - repo: local
+    hooks:
+      - id: generate-api-specifications
+        name: generate-api-specifications
+        language: system
+        entry: ./app/fastapi_specifications.sh
   -   repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v5.0.0
       hooks:
