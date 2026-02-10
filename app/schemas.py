@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 class RecommenderModel(str, Enum):
     association_rules = "association_rules"
     collaborative_filtering = "collaborative_filtering"
-    tfidf = "tfidf"
+    tfidf = "tfidfe"
     llm = "llm"
 
 
