@@ -10,6 +10,8 @@ A simple streamlit app is also implemented as simulator to test the different mo
 
 ## Set-up
 
+### Locally
+
 In order to have everything running the repo, after cloning it, run the following commands.
 They will create a conda environment (you need to have conda or miniconda installed),
 activate it, install requirements and make precommit (to make sure all committed code is well formatted).
@@ -24,6 +26,14 @@ make precommit
 I have used my old, 2012 Macbook pro with Intel processor.
 Therefore, I had to use older versions of Python and other packages.
 If you use a newer computer, you may have to adjust the requirements and/or the Dockerfile.
+
+### Google Gemini
+
+If you do not have any, generate your Google Gemini API key at https://aistudio.google.com/app/api-keys and save it in `~/.config/.gemini`. Then, and run
+```shell
+GEMINI_API_KEY=`cat ~/.config/.gemini`
+export GEMINI_API_KEY
+```
 
 # Solution
 
