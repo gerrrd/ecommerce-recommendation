@@ -18,23 +18,23 @@ services:
         reservations:
           cpus: "0.5"
           memory: 600m
-#  ui-component:
-#    build:
-#      context: ./
-#      dockerfile: ./ui/Dockerfile
-#    ports:
-#      - "8501:8501"
-#    container_name: ecommerce-recommendation-ui
-#    depends_on:
-#      - api-component
-#    environment:
-#      ENV: 'local'
-#      API_URL: "http://api-component:8080"
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: "0.5"
-#          memory: 400m
-#        reservations:
-#          cpus: "0.5"
-#          memory: 200m
+  ui-component:
+    build:
+      context: ./
+      dockerfile: ./ui/Dockerfile
+    ports:
+      - "8501:8501"
+    container_name: ecommerce-recommendation-ui
+    depends_on:
+      - api-component
+    environment:
+      ENV: 'local'
+      API_URL: "http://api-component:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 400m
+        reservations:
+          cpus: "0.5"
+          memory: 200m
