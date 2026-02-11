@@ -78,6 +78,10 @@ In some of the models, I had to downsample the training and/or the test set, tha
 When done, you can copy all the models to their corresponding folders with `copy_models.sh`.
 It will copy the used pickle files for both the API and the streamlit app (UI).
 
+## Evaluation - TODO
+
+Proper evaluation of all models.
+
 # Run the components
 
 ```shell

@@ -66,7 +66,7 @@ class CFRecommender(BaseEstimator, TransformerMixin):
         already selected items
 
         :param target_user: target user CustomerID
-        :param current_selection: currently selected stocks/products
+        :param selected_stocks: currently selected stocks/products
         :return: the recommended items
         """
 
@@ -78,33 +78,27 @@ class CFRecommender(BaseEstimator, TransformerMixin):
                 # unknown customer, no selected products
                 return []
             # unknown customer, existing selected products
-            new_line = pd.DataFrame(
-                [1] * len(selected_stocks),
-                index=selected_stocks,
-                columns=[target_user],
-            ).T
 
-            use_customer_stock = pd.concat(
-                [self.customer_stock, new_line]
-            ).fillna(0)
+            user_vector = pd.Series(0, index=self.customer_stock.columns)
+            user_vector[selected_stocks] = 1
 
-            use_customer_similarity = pd.DataFrame(
-                cosine_similarity(sparse.csr_matrix(use_customer_stock)),
-                index=use_customer_stock.index,
-                columns=use_customer_stock.index,
+            similar_scores = cosine_similarity(
+                sparse.csr_matrix(user_vector.values.reshape(1, -1)),
+                sparse.csr_matrix(self.customer_stock.values),
+            ).flatten()
+
+            customer_similarity = pd.Series(
+                similar_scores, index=self.customer_stock.index
             )
         else:
-            use_customer_similarity = self.customer_similarity
-            use_customer_stock = self.customer_stock
+            customer_similarity = self.customer_similarity[target_user]
+            user_vector = self.customer_stock.loc[target_user]
 
-        similar_customers = (
-            use_customer_similarity[target_user]
-            .sort_values(ascending=False)
-            .index[1 : SIMILAR_CUSTOMERS + 1]
-        )
-        sim_customer_stocks = use_customer_stock.loc[similar_customers].sum()
-        already_bought = use_customer_stock.loc[target_user]
-        recommendations = sim_customer_stocks[already_bought == 0].sort_values(
+        similar_customers = customer_similarity.sort_values(
+            ascending=False
+        ).index[0 : SIMILAR_CUSTOMERS + 1]
+        sim_customer_stocks = self.customer_stock.loc[similar_customers].sum()
+        recommendations = sim_customer_stocks[user_vector == 0].sort_values(
             ascending=False
         )
         return list(recommendations.head(self.top_n).index)
