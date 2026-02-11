@@ -59,10 +59,56 @@ class CFRecommender(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
-        return X["CustomerID"].apply(
-            lambda customer_id: self.get_recommendations(
-                target_user=customer_id
+        """
+        Vectorized batch recommendation follow the logic presented in the
+        fit function, instead of predicting 1 by 1.
+        """
+        # return X["CustomerID"].apply(
+        #     lambda customer_id: self.get_recommendations(
+        #         target_user=customer_id
+        #     )
+
+        test_df = (
+            X.groupby(["CustomerID", "StockCode"])
+            .size()
+            .reset_index(name="interaction")
+        )
+        test_customer_ids = test_df["CustomerID"].astype("category")
+
+        # in case we have products/stock that were not seen before
+        stock_indices = self.stock_indices.get_indexer(test_df["StockCode"])
+        valid_mask = stock_indices != -1
+
+        test_matrix = csr_matrix(
+            (
+                test_df["interaction"].iloc[valid_mask].astype(float),
+                (
+                    test_customer_ids.cat.codes[valid_mask],
+                    stock_indices[valid_mask],
+                ),
             )
+        )
+
+        # batch calculations
+        user_similarities = cosine_similarity(test_matrix, self.customer_stock)
+        all_scores = user_similarities @ self.customer_stock
+
+        # dense matrix for easy indexing
+        if hasattr(all_scores, "toarray"):
+            all_scores = all_scores.toarray()
+        rows, cols = test_matrix.nonzero()
+        all_scores[rows, cols] = 0
+
+        # top_n
+        top_indices = np.argsort(all_scores, axis=1)[:, -self.top_n :][:, ::-1]
+
+        recommendations = [
+            [self.stock_indices[i] for i in row if all_scores[r, i] > 0]
+            for r, row in enumerate(top_indices)
+        ]
+
+        return pd.Series(
+            recommendations, index=test_customer_ids.cat.categories
         )
 
     def get_recommendations(
