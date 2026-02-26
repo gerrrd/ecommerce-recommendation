@@ -10,14 +10,23 @@ from __future__ import annotations
 import pickle
 from typing import List, Tuple
 
+import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from ecommercerecommendation.models.arllmrecommender import ARLLMRecommender
-
-# from sklearn.metrics.pairwise import euclidean_distances
-
+from ecommercerecommendation.models.llmrecommender import LLMRecommender
 
 SIMILAR_CUSTOMERS = 10
+
+
+def merge_code_description(row: pd.Series) -> str:
+    """
+    Utility function for merging to columns when predicting.
+
+    :param row: pd.Series
+    :return:
+    """
+    return str(row["StockCode"]) + " " + row["Description"]
 
 
 class ARLLMLLMRecommender(BaseEstimator, TransformerMixin):
@@ -27,10 +36,13 @@ class ARLLMLLMRecommender(BaseEstimator, TransformerMixin):
         self.ar_llm_recommender = ARLLMRecommender(
             model_name=model_name, top_n=top_n
         )
+        # TODO: like this we store the LLM model twice, it should be simplified
+        self.llm_recommender = LLMRecommender(top_n=top_n)
         self.top_n = top_n
 
     def fit(self, X, y=None) -> ARLLMLLMRecommender:
         self.ar_llm_recommender.fit(X=X, y=y)
+        self.llm_recommender.fit(X=X, y=y)
         return self
 
     def transform(self, X):
@@ -52,15 +64,26 @@ class ARLLMLLMRecommender(BaseEstimator, TransformerMixin):
         :return: the recommended items
         """
 
-        ar_llm_recommendation = self.ar_llm_recommender.get_recommendation(
+        ar_llm_recommendation = self.ar_llm_recommender.get_recommendations(
             current_selection=current_selection,
             min_confidence=min_confidence,
         )
 
-        # TODO: enrich the prediction with similar stocks their by embeddings
-        # ar_llm_recommendation.append(  __some more products__  )
-
-        return ar_llm_recommendation
+        return sorted(
+            set(
+                sum(
+                    [
+                        self.llm_recommender.predict_element(
+                            int(rec.split(" ")[0])
+                        )
+                        .apply(merge_code_description, axis=1)
+                        .to_list()
+                        for rec in ar_llm_recommendation
+                    ],
+                    [],
+                )
+            )
+        )
 
     def evaluate_rules(
         self, X, sample_perc: float = 1

@@ -80,7 +80,7 @@ class LLMRecommender(BaseEstimator, TransformerMixin):
             similar_scores_sorted = (
                 cosine_similarity(new_embedding, self.embeddings)
                 .flatten()
-                .argsort()[-5:][::-1]
+                .argsort()[-self.top_n :][::-1]
             )
 
             recommendations = self.products.iloc[similar_scores_sorted]
@@ -88,7 +88,7 @@ class LLMRecommender(BaseEstimator, TransformerMixin):
 
         similar_stock_codes = (
             self.similar_items[stock_code]
-            .sort_values(ascending=False)[1 : 5 + 1]
+            .sort_values(ascending=False)[1 : self.top_n + 1]
             .index
         )
 
