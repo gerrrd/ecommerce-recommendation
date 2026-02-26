@@ -31,7 +31,14 @@ class ARLLMRecommender(BaseEstimator, TransformerMixin):
         self.transformer = SentenceTransformer(self.model_name)
         self.top_n = top_n
 
+        # TODO: to reduce duplicated code, we could have association rules as:
+        # self.ar_recommender = ARRecommender()
+
     def fit(self, X, y=None) -> ARLLMRecommender:
+        # TODO: here we could start with
+        # self.ARRecommender.fit(...)
+        # and use its results
+
         transaction_encoder = TransactionEncoder()
 
         # we use code + description as unique identifier of a stock, as

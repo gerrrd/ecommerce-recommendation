@@ -49,7 +49,7 @@ I have chosen the following 5 models:
 - *LLM (Sentence Transformers):* content-based, using the semantic meaning, it can predict for new words/descriptions, computationally heavy
 - *LLM-embedding-boosted Association rules:* instead of direct matching among the rules, we use the (Euclidian) distance from their text, gaining recommendations also having synonyms or similar words
 - #TODO *LLM-Association rules-LLM:* as the previous one but also add recommendations based on the embedding distance from the results.
-- #TODO2 *LLM-Association rules-LLM-LLM:* as the previous one but followed by an API call to Google Gemini 1.5 Flash via `google-genai` to understand which of the recommended elements are most probable/logical lifestyle bundle.
+- #TODO2 *LLM-Association rules-LLM-LLM:* as the previous one but followed by an API call to Google Gemini 2.5 Flash via `google-genai` to understand which of the recommended elements are most probable/logical lifestyle bundle.
 
 ## Architecture
 
