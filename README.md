@@ -39,10 +39,11 @@ If you do not have any, generate your Google Gemini API key at https://aistudio.
 GEMINI_API_KEY=`cat ~/.config/.gemini`
 export GEMINI_API_KEY
 ```
+so that the Google client can reach the API.
 
 # Solution
 
-I have implemented 5 different recommender systems and services to perform it.
+I have implemented 7 different recommender systems and services to perform it.
 
 ## Models
 
@@ -66,15 +67,17 @@ Firstly, there are 5 notebooks with
 - 3_modelling: model training and saving them
 - 4_test_api: to be able to test the API quickly in a notebook
 - 5_llm_association: for the last model (association rules with LLM embedding)
+- 6_test_Gemini: to test the Google Gemini API and the prompt class
+- 7_llm_genai: to show the last model, LLM embedding, Association Rules and GenAI combined
 
 Then, there is an API serving the predictions based on the 4 chosen models. As my laptop has limited resources, I have skipped the LLM based predictions, but it can be included with minor change to the code.
 
-Lastly, there is a `streamlit` app as a Recommender System Simulator, to be able to test it clicking around, writing our ad-hoc descriptions.
+Lastly, there is a `streamlit` app as a Recommender System Simulator, to be able to test it by clicking around, choosing already selected products from a list or writing our ad-hoc descriptions.
 
 ## Investigation and training
 
 ### Notebooks
-In order to generate all the models (pickle files) necessary to run the API, run all lines in notebooks 1, 2 and 3.
+In order to generate all the models (pickle files) that are necessary to run the API, run all lines in notebooks 1, 2, 3 and 5.
 There are comments about decisions taken among the code lines.
 
 In some of the models, I had to downsample the training and/or the test set, that takes away statistical credibility, but it was necessary on my laptop I have used. In a real life scenario, we would use such instances that can handle the given data.
