@@ -14,11 +14,13 @@ from sentence_transformers import SentenceTransformer
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.metrics.pairwise import cosine_similarity
 
+from ecommercerecommendation.utils.constants import LOCAL_MODEL_NAME
+
 
 class LLMRecommender(BaseEstimator, TransformerMixin):
     def __init__(
         self,
-        model_name: str = "all-MiniLM-L6-v2",
+        model_name: str = LOCAL_MODEL_NAME,
         columns: Union[str, List[str]] = "Description",
         top_n: int = 5,
     ):

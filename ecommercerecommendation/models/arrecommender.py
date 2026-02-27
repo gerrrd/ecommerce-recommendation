@@ -14,8 +14,6 @@ from mlxtend.frequent_patterns import association_rules, fpgrowth
 from mlxtend.preprocessing import TransactionEncoder
 from sklearn.base import BaseEstimator, TransformerMixin
 
-SIMILAR_CUSTOMERS = 10
-
 
 class ARRecommender(BaseEstimator, TransformerMixin):
     def __init__(self, top_n: int = 5):

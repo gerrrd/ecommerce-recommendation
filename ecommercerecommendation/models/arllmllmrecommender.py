@@ -8,15 +8,14 @@ Association Rules.
 from __future__ import annotations
 
 import pickle
-from typing import List, Tuple
+from typing import List
 
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from ecommercerecommendation.models.arllmrecommender import ARLLMRecommender
 from ecommercerecommendation.models.llmrecommender import LLMRecommender
-
-SIMILAR_CUSTOMERS = 10
+from ecommercerecommendation.utils.constants import LOCAL_MODEL_NAME
 
 
 def merge_code_description(row: pd.Series) -> str:
@@ -30,14 +29,16 @@ def merge_code_description(row: pd.Series) -> str:
 
 
 class ARLLMLLMRecommender(BaseEstimator, TransformerMixin):
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2", top_n: int = 5):
+    def __init__(self, model_name: str = LOCAL_MODEL_NAME, top_n: int = 5):
         self.rules = None
         self.model_name = model_name
         self.ar_llm_recommender = ARLLMRecommender(
             model_name=model_name, top_n=top_n
         )
         # TODO: like this we store the LLM model twice, it should be simplified
-        self.llm_recommender = LLMRecommender(top_n=top_n)
+        self.llm_recommender = LLMRecommender(
+            model_name=LOCAL_MODEL_NAME, top_n=top_n
+        )
         self.top_n = top_n
 
     def fit(self, X, y=None) -> ARLLMLLMRecommender:
@@ -84,50 +85,6 @@ class ARLLMLLMRecommender(BaseEstimator, TransformerMixin):
                 )
             )
         )
-
-    def evaluate_rules(
-        self, X, sample_perc: float = 1
-    ) -> Tuple[float, int, int]:
-        """
-        Evaluates the recommender system.
-
-        :param X: the test set
-        :param sample_perc: to downsample, in case it would last too long
-        :return: the stats
-        """
-
-        test_df = (
-            X[
-                X["StockCode"].isin(
-                    X["StockCode"].sample(frac=sample_perc, random_state=81)
-                )
-            ]
-            .groupby("InvoiceNo")["StockCode"]
-            .unique()
-            .reset_index()
-        )
-
-        hits = 0
-        opportunities = 0
-
-        # Iterate through each transaction in the test set
-        for _, transaction in test_df.iterrows():
-            items_bought = {"StockCode"}
-
-            # Check each rule
-            for _, rule in self.rules.iterrows():
-                antecedent = set(rule["antecedents"])
-                consequent = set(rule["consequents"])
-
-                # Opportunity: Did the customer buy the 'If' part?
-                if antecedent.issubset(items_bought):
-                    opportunities += 1
-                    # Hit: Did they also buy the 'Then' part?
-                    if consequent.issubset(items_bought):
-                        hits += 1
-
-        hit_rate = hits / opportunities if opportunities > 0 else 0
-        return hit_rate, hits, opportunities
 
     def save_pickle(self, filename: str):
         """

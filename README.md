@@ -8,6 +8,11 @@ Five recommender systems are implemented (and deployed locally in a fastAPI toge
 
 A simple streamlit app is also implemented as simulator to test the different models. I have used an old laptop with limited resources, therefore I have not included the models with LLM in the API and the UI. They can be added easily or tested in a notebook.
 
+
+### Disclaimer
+
+This repository is intended to show-case some of the technologies that can be applied in this example. Code is not optimised, various points are not memory-optimal, and also no proper evaluation (to be able to compare the models) is implemented for now.
+
 ## Set-up
 
 ### Locally
@@ -102,3 +107,4 @@ I have used GenAI input as
 - part of Google searches,
 - to brainstorm certain topics and
 - for requirements to use relatively new packages in the old laptop
+- code optimization

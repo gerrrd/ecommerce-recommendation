@@ -3,6 +3,10 @@ This script has constants to be imported by other modules.
 
 """
 
+GEMINI_MODEL_ID = "gemini-2.5-flash"
+
+LOCAL_MODEL_NAME = "all-MiniLM-L6-v2"
+
 BULLET_POINT = "\n- "
 
 REMOVE_CHARS = ".,'\"&/- !()"
