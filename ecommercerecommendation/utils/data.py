@@ -4,17 +4,13 @@ This script has utility functions to handle data.
 """
 
 import os
-import re
 from subprocess import call
-from typing import Any, List, Set
+from typing import Any, Set
 
 import numpy as np
 import pandas as pd
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import maximum_bipartite_matching
-
-BULLET_POINT = "\n- "
-REMOVE_CHARS = ".,'\"&/- !()"
 
 
 def get_data(name: str = "data") -> pd.DataFrame:
@@ -61,57 +57,6 @@ def venn_sets(set1: Set[Any], set2: Set[Any]) -> str:
         f"[ {cardinality_set1_2} - "
         f"({cardinality_intersection}) - "
         f"{cardinality_set2_1} ]"
-    )
-
-
-def bullet_points(list_str: List[str]) -> str:
-    """
-    Creates a string with bullet points out of a list of strings.
-
-    :param list_str: separate bullet points
-    :return: as a string, concatenated
-    """
-    return BULLET_POINT + BULLET_POINT.join(list_str)
-
-
-def remove_chars(s: str) -> str:
-    """
-    Removes all non-alphanumeric characters, that we want to check about,
-    from the string.
-
-    :param s: description
-    :return: text without those characters
-    """
-    s_temp = s
-    for c in REMOVE_CHARS:
-        s_temp = s_temp.replace(c, "")
-    return s_temp
-
-
-def clean_entry(text: str) -> str:
-    """
-    Text cleaning functions as presented in the 2nd notebook.
-
-    :param text: description
-    :return: the clean description
-    """
-
-    return " ".join(
-        re.sub(
-            r"([0123456789].\")",
-            r"\1 ",
-            re.sub(
-                r"[!()/,]",
-                " ",
-                text.strip(".")
-                .replace(". ", " ")
-                .replace("&", " AND ")
-                .replace("/", " ")
-                .replace(" - ", " "),
-            ),
-        )
-        .strip(" ")
-        .split()
     )
 
 

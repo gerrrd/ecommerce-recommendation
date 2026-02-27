@@ -6,7 +6,7 @@ from typing import Dict, List, Tuple
 import requests
 import streamlit as st
 
-from ecommercerecommendation.utils.data import clean_entry
+from ecommercerecommendation.utils.strings import clean_entry
 
 MODELS = ["association_rules", "collaborative_filtering", "tfidf", "llm"]
 URL_API = os.environ.get("API_URL", "http://0.0.0.0:8080")

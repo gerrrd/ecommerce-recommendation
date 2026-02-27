@@ -17,9 +17,9 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.metrics.pairwise import euclidean_distances
 
 from ecommercerecommendation.utils.data import (
-    clean_entry,
     find_minimax_assignment,
 )
+from ecommercerecommendation.utils.strings import clean_entry
 
 SIMILAR_CUSTOMERS = 10
 
