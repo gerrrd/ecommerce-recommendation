@@ -11,7 +11,7 @@ A simple streamlit app is also implemented as simulator to test the different mo
 
 ### Disclaimer
 
-This repository is intended to show-case some of the technologies that can be applied in this example. Code is not optimised, various points are not memory-optimal, and also no proper evaluation (to be able to compare the models) is implemented for now.
+This repository is intended to show-case some of the technologies that can be applied in this example, and a Dockerized version of API + Streamlit app. Code is not optimised, various points are not memory-optimal, and also no proper evaluation (to be able to compare the models) is implemented for now.
 
 ## Set-up
 
@@ -53,8 +53,8 @@ I have chosen the following 5 models:
 - *Tf-idf (Term Frequency-Inverse Document Frequency):* content-based, using text (description) based on their frequency (per word), fast, but depends highly on the training set (i.e. words)
 - *LLM (Sentence Transformers):* content-based, using the semantic meaning, it can predict for new words/descriptions, computationally heavy
 - *LLM-embedding-boosted Association rules:* instead of direct matching among the rules, we use the (Euclidian) distance from their text, gaining recommendations also having synonyms or similar words
-- #TODO *LLM-Association rules-LLM:* as the previous one but also add recommendations based on the embedding distance from the results.
-- #TODO2 *LLM-Association rules-LLM-LLM:* as the previous one but followed by an API call to Google Gemini 2.5 Flash via `google-genai` to understand which of the recommended elements are most probable/logical lifestyle bundle.
+- *LLM-Association rules-LLM:* as the previous one but also add recommendations based on the embedding distance from the results.
+- *LLM-Association rules-LLM-GenAI:* as the previous one but followed by an API call to Google Gemini 2.5 Flash via `google-genai` to understand which of the recommended elements are most probable/logical lifestyle bundle.
 
 ## Architecture
 
