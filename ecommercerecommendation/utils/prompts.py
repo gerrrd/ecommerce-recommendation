@@ -21,7 +21,7 @@ class Prompt:
 
     def __init__(
         self,
-        prompt_str: Union[str, None] = None,
+        prompt_str: str,
         replace: Union[None, Dict[str, Any]] = None,
         **kwargs,
     ):
